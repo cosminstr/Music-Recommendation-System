@@ -1,6 +1,7 @@
 /__pycache__
 /env
 bibliografie.txt
-dataset.csv
 .cache
 credentials.py
+spotify_data.csv
+spotify_dataset.csv
