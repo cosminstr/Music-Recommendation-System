@@ -12,17 +12,10 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                scope=MY_SCOPES))
 
 # DATA PREPROCESSING
-music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\FILTERED_spotify_dataset.csv')
+music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\FILTERED_spotify_dataset2.csv')
+music_data.drop(columns=['Unnamed: 0'], inplace=True)
 music_data = music_data.drop_duplicates()
 music_data = music_data.dropna(axis=0)
-
-# scaler = StandardScaler()
-# music_data = music_data.select_dtypes(np.number)
-
-# scaled_X = scaler.fit_transform(music_data.values)
-
-# scaled_music_data = pd.DataFrame(scaled_X,
-#                         columns=music_data.columns)
 
 if __name__ == "__main__":
     # while True:
@@ -39,8 +32,6 @@ if __name__ == "__main__":
         audio_features = sp.audio_features(track_id)
         track_info = sp.track(track_id)
 
-        # print(audio_features)
-        # print(audio_features[0]['id'])
     else:
         print('Nu exista acest track')
 
@@ -53,6 +44,8 @@ if __name__ == "__main__":
         # else: 'Comanda invalida'
 
     song_data = {
+        'popularity': track_info['popularity'],
+        'year': track_info['album']['release_date'].split('-')[0],
         'danceability': audio_features[0]['danceability'],
         'energy': audio_features[0]['energy'],
         'key': audio_features[0]['key'],
@@ -64,12 +57,27 @@ if __name__ == "__main__":
         'liveness': audio_features[0]['liveness'],
         'valence': audio_features[0]['valence'],
         'tempo': audio_features[0]['tempo'],
-        'popularity': track_info['popularity'],
-        'year': track_info['album']['release_date'].split('-')[0],
-        'explicit': track_info['explicit'],
+        # 'explicit': track_info['explicit'],
         'duration_ms': track_info['duration_ms'],
         'time_signature': audio_features[0]['time_signature']
     }
 
     user_song_features = pd.DataFrame(song_data, index=[0])
 
+    print(user_song_features)
+
+    # Scale down the values before applying Kmeans 
+    scaler = StandardScaler()
+    music_data_aux = music_data.select_dtypes(np.number)
+
+    scaled_data = scaler.fit_transform(music_data_aux.values)
+
+    scaled_music_data = pd.DataFrame(scaled_data,
+                            columns=music_data_aux.columns)
+    
+    # Adding the str columns to the scaled down dataframe
+    spotify_music_data = pd.concat([music_data[['artist_name', 'track_name', 'track_id']], scaled_music_data], axis=1)
+    
+    print(spotify_music_data)
+
+    # user_song_features IS NOT SCALED DOWN

@@ -6,4 +6,4 @@ music_data.drop(music_data[music_data['popularity'] <= 70].index, inplace=True)
 # drop() expects indexes as args
 
 music_data.reset_index()
-music_data.to_csv('FILTERED_spotify_dataset.csv', index=False)
+music_data.to_csv('FILTERED_spotify_dataset2.csv', index=False)
