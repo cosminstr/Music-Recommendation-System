@@ -3,5 +3,6 @@
 bibliografie.txt
 .cache
 credentials.py
-spotify_data.csv
-spotify_dataset.csv
+small_spotify_data.csv
+kaggle_dataset.csv
+ORIGINAL_spotify_dataset.csv
