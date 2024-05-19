@@ -44,6 +44,9 @@ if __name__ == "__main__":
         # else: 'Comanda invalida'
 
     song_data = {
+        'artist_name': track_info['album']['artists'][0]['name'],
+        'track_name': track_info['name'],
+        'track_id': track_id,
         'popularity': track_info['popularity'],
         'year': track_info['album']['release_date'].split('-')[0],
         'danceability': audio_features[0]['danceability'],

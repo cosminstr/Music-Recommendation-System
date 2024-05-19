@@ -1,1 +1,1 @@
-Music Recommendation System using Spotipy API
+Music Recommendation System using Spotipy 
