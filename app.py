@@ -20,7 +20,7 @@ music_data.drop(columns=['time_signature'], inplace=True)
 music_data = music_data.drop_duplicates()
 music_data = music_data.dropna(axis=0)
 
-# Users input
+# List of songs the user likes
 songs_data_list: list = []
 
 if __name__ == "__main__":
@@ -73,27 +73,23 @@ if __name__ == "__main__":
         else:
             print('Nu exista acest track')
 
-    # Creating the dataframe with a list of dictionaries instead of concatenating rows to the dataframe
+    # Created the dataframe with a list of dictionaries instead of concatenating rows to the dataframe
     user_songs_features = pd.DataFrame(songs_data_list)
 
-    # Scaler
+
     scaler = StandardScaler()
 
-    # Selecting only the numerical values
     music_data_aux = music_data.select_dtypes(np.number)
     user_songs_aux = user_songs_features.select_dtypes(np.number)    
 
-    # Scaling down the values
-    scaled_data = scaler.fit_transform(music_data_aux.values)
 
+    scaled_data = scaler.fit_transform(music_data_aux.values)
     # user data not refitted, only scaled
     scaled_user_data = scaler.transform(user_songs_aux.values)
 
-    # Creating scaled down dataframes
     scaled_music_data = pd.DataFrame(scaled_data, columns=music_data_aux.columns)
     scaled_user_songs = pd.DataFrame(scaled_user_data, columns= user_songs_aux.columns)
 
-    # Adding the str columns to the scaled down dataframes
     spotify_music_data = pd.concat([music_data[['artist_name', 'track_name', 'track_id']], scaled_music_data], axis=1)
     user_songs_data = pd.concat([user_songs_features[['artist_name', 'track_name', 'track_id']], scaled_user_songs], axis = 1)
     
@@ -104,23 +100,14 @@ if __name__ == "__main__":
     kmeans = KMeans(n_clusters=10, random_state=42).fit(scaled_music_data)
     spotify_music_data['cluster'] = kmeans.labels_
 
-    # Predicting the cluster for user songs
     user_clusters = kmeans.predict(scaled_user_songs)
-    # Find the most common cluster
     common_cluster = np.bincount(user_clusters).argmax()
-
-    # Filter songs in the common cluster
     cluster_songs = spotify_music_data[spotify_music_data['cluster'] == common_cluster]
-
-    # Calculate distances from the user songs to the songs in the common cluster
     cluster_song_features = cluster_songs.drop(columns=['artist_name', 'track_name', 'track_id', 'cluster'])
     distances = euclidean_distances(scaled_user_songs, cluster_song_features)
-
-    # Mean distance for each song in the cluster
     mean_distances = distances.mean(axis=0)
     cluster_songs['distance'] = mean_distances
 
-    # Recommend top 10 closest songs
     recommended_songs = cluster_songs.nsmallest(10, 'distance')
 
     print("Recommended Songs:")
