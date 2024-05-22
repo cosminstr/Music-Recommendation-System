@@ -13,24 +13,24 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                redirect_uri=REDIRECT_URI,
                                                scope=MY_SCOPES))
 
-music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\FILTERED_spotify_dataset2.csv')
+music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\FILTERED_spotify_dataset3.csv')
 # Drop unwanted features
 music_data.drop(columns=['Unnamed: 0'], inplace=True)
 music_data.drop(columns=['time_signature'], inplace=True)
 music_data = music_data.drop_duplicates()
 music_data = music_data.dropna(axis=0)
 
-# List of songs the user likes
+# User's songs
 songs_data_list: list = []
 
 if __name__ == "__main__":
 
-    # No. of songs the user enters
     i: int = 3
     no: int = 0
 
     print(f'Hi! I am a Music Recommendation System!\nI will suggest 10 songs based on 3 others you like!\n')
     
+    # looping until it finds 3 valid songs
     while no != i:
 
         print(f"{no + 1}) Pick a Track:")
@@ -71,11 +71,10 @@ if __name__ == "__main__":
             songs_data_list.append(song_data)
             no = no + 1
         else:
-            print('Nu exista acest track')
+            print('This track doesnt exit')
 
-    # Created the dataframe with a list of dictionaries instead of concatenating rows to the dataframe
+    # created the dataframe with a list of dictionaries instead of adding another entry in a df every time
     user_songs_features = pd.DataFrame(songs_data_list)
-
 
     scaler = StandardScaler()
 
@@ -84,7 +83,6 @@ if __name__ == "__main__":
 
 
     scaled_data = scaler.fit_transform(music_data_aux.values)
-    # user data not refitted, only scaled
     scaled_user_data = scaler.transform(user_songs_aux.values)
 
     scaled_music_data = pd.DataFrame(scaled_data, columns=music_data_aux.columns)
@@ -97,7 +95,9 @@ if __name__ == "__main__":
     # print(user_songs_data)
 
     # K-means clustering
-    kmeans = KMeans(n_clusters=10, random_state=42).fit(scaled_music_data)
+    seed = np.random.randint(35, 40)
+
+    kmeans = KMeans(n_clusters=10, random_state=seed).fit(scaled_music_data)
     spotify_music_data['cluster'] = kmeans.labels_
 
     user_clusters = kmeans.predict(scaled_user_songs)
@@ -111,4 +111,8 @@ if __name__ == "__main__":
     recommended_songs = cluster_songs.nsmallest(10, 'distance')
 
     print("Recommended Songs:")
-    print(recommended_songs[['artist_name', 'track_name', 'track_id']])
+    # print(recommended_songs[['artist_name', 'track_name', 'track_id']])
+
+    playlist = sp.user_playlist_create('21zrpk5i6zoo65pixpej6emci', 'Recomandari', public=True)
+    sp.user_playlist_add_tracks('21zrpk5i6zoo65pixpej6emci', playlist['id'], recommended_songs['track_id'])
+    print(playlist['external_urls']['spotify'])
