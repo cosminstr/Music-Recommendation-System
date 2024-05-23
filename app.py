@@ -7,6 +7,7 @@ from spotipy.oauth2 import SpotifyOAuth
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import euclidean_distances
+import matplotlib.pyplot as plt
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                client_secret=CLIENT_SECRET,
@@ -81,7 +82,6 @@ if __name__ == "__main__":
     music_data_aux = music_data.select_dtypes(np.number)
     user_songs_aux = user_songs_features.select_dtypes(np.number)    
 
-
     scaled_data = scaler.fit_transform(music_data_aux.values)
     scaled_user_data = scaler.transform(user_songs_aux.values)
 
@@ -94,10 +94,20 @@ if __name__ == "__main__":
     # print(spotify_music_data)
     # print(user_songs_data)
 
-    # K-means clustering
-    seed = np.random.randint(35, 40)
+    # The code commented below was only used once to measure the right value for the number of clusters
 
-    kmeans = KMeans(n_clusters=10, random_state=seed).fit(scaled_music_data)
+    # sum_of_squared_distances = []
+
+    # for k in range(1, 20):
+    #     kmeans = KMeans(n_clusters=k, random_state=40).fit(scaled_music_data)
+    #     sum_of_squared_distances.append(kmeans.inertia_)
+
+    # plt.plot(range(1, 20), sum_of_squared_distances, 'bx-')
+    # plt.show()
+
+    # K-means clustering
+
+    kmeans = KMeans(n_clusters=8).fit(scaled_music_data)
     spotify_music_data['cluster'] = kmeans.labels_
 
     user_clusters = kmeans.predict(scaled_user_songs)
