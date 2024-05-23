@@ -15,13 +15,13 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                scope=MY_SCOPES))
 
 music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\FILTERED_spotify_dataset3.csv')
-# Drop unwanted features
+# drop unwanted features
 music_data.drop(columns=['Unnamed: 0'], inplace=True)
 music_data.drop(columns=['time_signature'], inplace=True)
 music_data = music_data.drop_duplicates()
 music_data = music_data.dropna(axis=0)
 
-# User's songs
+# user's songs
 songs_data_list: list = []
 
 if __name__ == "__main__":
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     # print(spotify_music_data)
     # print(user_songs_data)
 
-    # The code commented below was only used once to measure the right value for the number of clusters
+    # the code commented below was only used once to measure the right value for the number of clusters
 
     # sum_of_squared_distances = []
 
@@ -105,24 +105,30 @@ if __name__ == "__main__":
     # plt.plot(range(1, 20), sum_of_squared_distances, 'bx-')
     # plt.show()
 
-    # K-means clustering
+    # kmeans clustering
 
     kmeans = KMeans(n_clusters=8).fit(scaled_music_data)
     spotify_music_data['cluster'] = kmeans.labels_
 
-    user_clusters = kmeans.predict(scaled_user_songs)
-    common_cluster = np.bincount(user_clusters).argmax()
-    cluster_songs = spotify_music_data[spotify_music_data['cluster'] == common_cluster]
-    cluster_song_features = cluster_songs.drop(columns=['artist_name', 'track_name', 'track_id', 'cluster'])
-    distances = euclidean_distances(scaled_user_songs, cluster_song_features)
-    mean_distances = distances.mean(axis=0)
-    cluster_songs['distance'] = mean_distances
+    user_songs_clusters = kmeans.predict(scaled_user_songs)
+    common_cluster = np.bincount(user_songs_clusters).argmax()
+    dataset_cluster_songs = spotify_music_data[spotify_music_data['cluster'] == common_cluster]
+    dataset_cluster_song_features = dataset_cluster_songs.drop(columns=['artist_name', 'track_name', 'track_id', 'cluster'])
 
-    recommended_songs = cluster_songs.nsmallest(10, 'distance')
+    # adding small noise to the distances for randomness
+    distances = euclidean_distances(scaled_user_songs, dataset_cluster_song_features)
+    mean_distances = distances.mean(axis=0)
+    noise = np.random.normal(0, 0.01, mean_distances.shape)
+    dataset_cluster_songs['distance'] = mean_distances + noise
+
+    # picking 10 random songs from the closest 30 for increased randomness
+    top_20_songs = dataset_cluster_songs.nsmallest(30, 'distance')
+    recommended_songs = top_20_songs.sample(10)
 
     print("Recommended Songs:")
     # print(recommended_songs[['artist_name', 'track_name', 'track_id']])
 
+    # 21zrpk5i6zoo65pixpej6emci is my spotify public id
     playlist = sp.user_playlist_create('21zrpk5i6zoo65pixpej6emci', 'Recomandari', public=True)
     sp.user_playlist_add_tracks('21zrpk5i6zoo65pixpej6emci', playlist['id'], recommended_songs['track_id'])
     print(playlist['external_urls']['spotify'])
