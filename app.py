@@ -84,17 +84,17 @@ if __name__ == "__main__":
     scaled_data = scaler.fit_transform(music_data_aux.values)
     scaled_user_data = scaler.transform(user_songs_aux.values)
 
-    scaled_music_data = pd.DataFrame(scaled_data, columns=music_data_aux.columns)
-    scaled_user_songs = pd.DataFrame(scaled_user_data, columns= user_songs_aux.columns)
+    scaled_music_data_df = pd.DataFrame(scaled_data, columns=music_data_aux.columns)
+    scaled_user_songs_df = pd.DataFrame(scaled_user_data, columns= user_songs_aux.columns)
 
-    spotify_music_data = pd.concat([music_data[['artist_name', 'track_name', 'track_id']], scaled_music_data], axis=1)
-    user_songs_data = pd.concat([user_songs_features[['artist_name', 'track_name', 'track_id']], scaled_user_songs], axis = 1)
+    spotify_music_data = pd.concat([music_data[['artist_name', 'track_name', 'track_id']], scaled_music_data_df], axis=1)
+    user_songs_data = pd.concat([user_songs_features[['artist_name', 'track_name', 'track_id']], scaled_user_songs_df], axis = 1)
     
     # print(spotify_music_data)
     # print(user_songs_data)
 
-    recommended_songs = recommend_alg(dataset_songs_scaled=scaled_music_data, 
-                                  user_songs_scaled=scaled_user_songs,
+    recommended_songs = recommend_alg(dataset_songs_scaled=scaled_music_data_df, 
+                                  user_songs_scaled=scaled_user_songs_df,
                                   dataset_songs=spotify_music_data)
 
     print("Recommended Songs:")
