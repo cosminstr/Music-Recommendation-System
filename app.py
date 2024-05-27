@@ -5,9 +5,7 @@ import json
 from credentials import *
 from spotipy.oauth2 import SpotifyOAuth
 from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-from sklearn.metrics.pairwise import euclidean_distances
-import matplotlib.pyplot as plt
+from model import recommend_alg
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                client_secret=CLIENT_SECRET,
@@ -77,8 +75,9 @@ if __name__ == "__main__":
     # created the dataframe with a list of dictionaries instead of adding another entry in a df every time
     user_songs_features = pd.DataFrame(songs_data_list)
 
-    scaler = StandardScaler()
 
+    # scaling down the numeric values before applying the algorithm
+    scaler = StandardScaler()
     music_data_aux = music_data.select_dtypes(np.number)
     user_songs_aux = user_songs_features.select_dtypes(np.number)    
 
@@ -94,36 +93,9 @@ if __name__ == "__main__":
     # print(spotify_music_data)
     # print(user_songs_data)
 
-    # the code commented below was only used once to measure the right value for the number of clusters
-
-    # sum_of_squared_distances = []
-
-    # for k in range(1, 20):
-    #     kmeans = KMeans(n_clusters=k, random_state=40).fit(scaled_music_data)
-    #     sum_of_squared_distances.append(kmeans.inertia_)
-
-    # plt.plot(range(1, 20), sum_of_squared_distances, 'bx-')
-    # plt.show()
-
-    # kmeans clustering
-
-    kmeans = KMeans(n_clusters=8).fit(scaled_music_data)
-    spotify_music_data['cluster'] = kmeans.labels_
-
-    user_songs_clusters = kmeans.predict(scaled_user_songs)
-    common_cluster = np.bincount(user_songs_clusters).argmax()
-    dataset_cluster_songs = spotify_music_data[spotify_music_data['cluster'] == common_cluster]
-    dataset_cluster_song_features = dataset_cluster_songs.drop(columns=['artist_name', 'track_name', 'track_id', 'cluster'])
-
-    # adding small noise to the distances for randomness
-    distances = euclidean_distances(scaled_user_songs, dataset_cluster_song_features)
-    mean_distances = distances.mean(axis=0)
-    noise = np.random.normal(0, 0.01, mean_distances.shape)
-    dataset_cluster_songs['distance'] = mean_distances + noise
-
-    # picking 10 random songs from the closest 30 for increased randomness
-    top_20_songs = dataset_cluster_songs.nsmallest(30, 'distance')
-    recommended_songs = top_20_songs.sample(10)
+    recommended_songs = recommend_alg(dataset_songs_scaled=scaled_music_data, 
+                                  user_songs_scaled=scaled_user_songs,
+                                  dataset_songs=spotify_music_data)
 
     print("Recommended Songs:")
     # print(recommended_songs[['artist_name', 'track_name', 'track_id']])
