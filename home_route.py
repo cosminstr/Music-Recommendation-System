@@ -29,8 +29,9 @@ results = []
 def home():
 
     if request.method == 'POST':
-
-        if request.form['playlist'] is None:
+        
+        # extract the data if the user did not submbit a playlist
+        if not request.form.get('playlist'):
             results1 = sp.search(q=f"track:{request.form['song1']} artist:{request.form['artist1']}", limit=1, type='track')
             results.append(results1)
             results2 = sp.search(q=f"track:{request.form['song2']} artist:{request.form['artist2']}", limit=1, type='track')
@@ -68,11 +69,25 @@ def home():
                     }
 
                     songs_data_list.append(song_data)
-        else:
-            results = sp.playlist_tracks(request.form['playlist'])
 
-            for i in range(1, results['total'] + 1):
-                track = results['tracks']['items'][i]
+        # extract the data if the user did submit a playlist
+        else:
+
+            def fetch_playlist_tracks(playlist_id):
+                offset = 0
+                tracks = []
+                while True:
+                    results = sp.playlist_tracks(playlist_id, offset=offset)
+                    tracks += results['items']
+                    if len(results['items']) == 0:
+                        break
+                    offset += len(results['items'])
+                return tracks
+
+            playlist_tracks = fetch_playlist_tracks(request.form['playlist'])
+
+            for track in playlist_tracks:
+                track = track['track']
                 track_id = track['id']
                 audio_features = sp.audio_features(track_id)
                 track_info = sp.track(track_id)
