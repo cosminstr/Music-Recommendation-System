@@ -1,4 +1,4 @@
-# Image Denoising Machine Learning Model
+# Music Recommendation System
 
 ## Description
 
@@ -8,6 +8,7 @@ Music Recommendation System implemented using K-means Clustering Algorithm with 
 
 ## Technologies Used
 
+- Spotipy for interacting with the Spotify API
 - Pandas and NumPy for data manipulation
 - Sci-Kit Learn for the ML model
 - Flask for the Web Application
