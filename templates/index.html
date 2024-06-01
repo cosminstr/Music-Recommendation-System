@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet">
     <title>suchAs</title>
     <style>
         body {
@@ -12,21 +12,74 @@
             height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
+            flex-direction: column;
         }
 
-        h1{
+        h1 {
             text-align: center;
+            font-size: 50px;
             font-family: 'Comfortaa', monospace;
             font-weight: 500;
             color: #d8cccc;
-            position: relative;
-            top: 15%; 
-            transform: translateY(-50%);
+            margin-bottom: 25px; 
+            margin-top: -100px; 
         }
+
+        p {
+            text-align: center;
+            font-size: 25px;
+            font-family: 'Comfortaa', monospace;
+            font-weight: 300;
+            color: #d8cccc;
+            margin-top: 5px; 
+            margin-bottom: 50px; 
+        }
+
+        form {
+            background-color: #454545; 
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 300px;
+            width: 100%;
+        }
+
+        input[type="submit"],
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #575757; /* Input background color */
+            color: #ffffff;
+            outline: none;
+        }
+
+        input[type="submit"] {
+            background-color: #5cb85c; /* Submit button color */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #4cae4c; /* Hover color for the submit button */
+        }
+
     </style>
 </head>
 <body>
     <h1>suchAs</h1>
+    <p>Music Recommendation System with Spotify Integration</p>
+    <form>
+        <input type="text" placeholder="Song 1">
+        <input type="text" placeholder="Artist 1">
+        <input type="text" placeholder="Song 2">
+        <input type="text" placeholder="Artist 2">
+        <input type="text" placeholder="Song 3">
+        <input type="text" placeholder="Artist 3">
+        <input type="submit" value="Submit">
+    </form>
 </body>
 </html>
