@@ -14,6 +14,7 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                scope=MY_SCOPES))
 
 music_data: pd.DataFrame = pd.read_csv('D:\Projects\Music Recommendation System\spotify_dataset3.csv')
+
 # drop unwanted features
 music_data.drop(columns=['Unnamed: 0'], inplace=True)
 music_data.drop(columns=['time_signature'], inplace=True)
