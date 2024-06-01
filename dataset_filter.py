@@ -6,5 +6,5 @@ music_data.drop(music_data[music_data['popularity'] <= 50].index, inplace=True)
 # drop() expects indexes as args
 
 music_data.reset_index()
-music_data.to_csv('FILTERED_spotify_dataset3.csv', index=False)
+music_data.to_csv('spotify_dataset3.csv', index=False)
 # change the path to the file in app.py after exporting to csv as well
