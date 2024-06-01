@@ -11,14 +11,24 @@
     <body>
         <h1>suchAs</h1>
         <p>Music Recommendation System with Spotify Integration</p>
-        <form>
-            <input type="text" placeholder="Song 1">
-            <input type="text" placeholder="Artist 1">
-            <input type="text" placeholder="Song 2">
-            <input type="text" placeholder="Artist 2">
-            <input type="text" placeholder="Song 3">
-            <input type="text" placeholder="Artist 3">
+        <form method="POST" action="/">
+            <input type="text" id="song1" name="song1" placeholder="Song 1">
+            
+            <input type="text" id="artist1" name="artist1" placeholder="Artist 1">
+            
+            <input type="text" id="song2" name="song2" placeholder="Song 2">
+            
+            <input type="text" id="artist2" name="artist2" placeholder="Artist 2">
+            
+            <input type="text" id="song3" name="song3" placeholder="Song 3">
+
+            <input type="text" id="artist3" name="artist3" placeholder="Artist 3">
+
+            <input type="text" id="playlist" name="playlist" placeholder="Playlist">
+            
             <input type="submit" value="Submit">
         </form>
+        
+        
     </body>
 </html>
