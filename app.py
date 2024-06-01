@@ -6,6 +6,7 @@ from credentials import *
 from spotipy.oauth2 import SpotifyOAuth
 from sklearn.preprocessing import StandardScaler
 from model import recommend_alg
+from flask import Flask
 
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                client_secret=CLIENT_SECRET,
@@ -19,11 +20,16 @@ music_data.drop(columns=['time_signature'], inplace=True)
 music_data = music_data.drop_duplicates()
 music_data = music_data.dropna(axis=0)
 
+app = Flask(__name__)
+app.secret_key = 'mysecret'
+
+from home_route import *
+
 # user's songs
 songs_data_list: list = []
 
 if __name__ == "__main__":
-
+    app.run(debug=True, port=4500)
     i: int = 3
     no: int = 0
 
