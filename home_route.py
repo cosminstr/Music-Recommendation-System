@@ -71,7 +71,35 @@ def home():
         else:
             results = sp.playlist_tracks(request.form['playlist'])
 
-            
+            for i in range(1, results['total'] + 1):
+                track = results['tracks']['items'][i]
+                track_id = track['id']
+                audio_features = sp.audio_features(track_id)
+                track_info = sp.track(track_id)
+
+                song_data = {
+                    'artist_name': track_info['album']['artists'][0]['name'],
+                    'track_name': track_info['name'],
+                    'track_id': track_id,
+                    'popularity': track_info['popularity'],
+                    'year': int(track_info['album']['release_date'].split('-')[0]),
+                    'danceability': audio_features[0]['danceability'],
+                    'energy': audio_features[0]['energy'],
+                    'key': audio_features[0]['key'],
+                    'loudness': audio_features[0]['loudness'],
+                    'mode': audio_features[0]['mode'],
+                    'speechiness': audio_features[0]['speechiness'],
+                    'acousticness': audio_features[0]['acousticness'],
+                    'instrumentalness': audio_features[0]['instrumentalness'],
+                    'liveness': audio_features[0]['liveness'],
+                    'valence': audio_features[0]['valence'],
+                    'tempo': audio_features[0]['tempo'],
+                    # 'explicit': track_info['explicit'],
+                    'duration_ms': track_info['duration_ms']
+                    # 'time_signature': audio_features[0]['time_signature']
+                }
+
+                songs_data_list.append(song_data)
 
         # created the dataframe with a list of dictionaries instead of adding another entry in a df every time
         user_songs_features = pd.DataFrame(songs_data_list)
