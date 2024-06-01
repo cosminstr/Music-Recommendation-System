@@ -29,7 +29,9 @@ from home_route import *
 songs_data_list: list = []
 
 if __name__ == "__main__":
+
     app.run(debug=True, port=4500)
+    
     i: int = 3
     no: int = 0
 

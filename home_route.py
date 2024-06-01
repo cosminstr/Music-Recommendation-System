@@ -1,7 +1,12 @@
-from flask import render_template
+from flask import render_template, request
 from app import *
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 
 def home():
-    return render_template('index.html')
+
+    if request.method == 'POST':
+        # TODO 
+        pass
+    else:
+        return render_template('index.html')
