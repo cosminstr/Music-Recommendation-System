@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from model import recommend_alg
+import time
+
 
 # TODO : Task parallelization
 #        Multi-Hot Encode genres
@@ -36,6 +38,9 @@ def home():
         
         # extract the data if the user did not submbit a playlist
         if not request.form.get('playlist'):
+
+            t0 = time.time()
+
             results1 = sp.search(q=f"track:{request.form['song1']} artist:{request.form['artist1']}", limit=1, type='track')
             results.append(results1)
             results2 = sp.search(q=f"track:{request.form['song2']} artist:{request.form['artist2']}", limit=1, type='track')
@@ -151,6 +156,9 @@ def home():
         # 21zrpk5i6zoo65pixpej6emci is my spotify public id
         playlist = sp.user_playlist_create('21zrpk5i6zoo65pixpej6emci', 'Recomandari', public=True)
         sp.user_playlist_add_tracks('21zrpk5i6zoo65pixpej6emci', playlist['id'], recommended_songs['track_id'])
+
+        t1 = time.time()
+        print(t1 - t0)
         # print(playlist['external_urls']['spotify'])
         return redirect(playlist['external_urls']['spotify'])
     else:
