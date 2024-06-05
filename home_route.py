@@ -8,6 +8,9 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from model import recommend_alg
 
+# TODO : Task parallelization
+#        Multi-Hot Encode genres
+
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=CLIENT_ID,
                                                client_secret=CLIENT_SECRET,
                                                redirect_uri=REDIRECT_URI,
