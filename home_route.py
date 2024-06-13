@@ -74,7 +74,7 @@ def home():
         # extract the data if the user did submit a playlist
         else:
 
-            def fetch_playlist_tracks(playlist_id):
+            def get_playlist_tracks(playlist_id):
                 offset = 0
                 tracks = []
                 while True:
@@ -85,7 +85,7 @@ def home():
                     offset += len(results['items'])
                 return tracks
 
-            playlist_tracks = fetch_playlist_tracks(request.form['playlist'])
+            playlist_tracks = get_playlist_tracks(request.form['playlist'])
 
             for track in playlist_tracks:
                 track = track['track']
