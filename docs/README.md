@@ -6,7 +6,7 @@ This is a Music Recommendation System implemented using K-means Clustering Algor
 
 The dataset used is the Spotify_1_Million_Tracks dataset from [Kaggle](https://www.kaggle.com/datasets/amitanshjoshi/spotify-1million-tracks)
 
-![web_app](https://github.com/cosminstr/Music-Recommendation-System/blob/main/resources/webapp.png)
+![web_app](https://github.com/cosminstr/Music-Recommendation-System/blob/main/docs/webapp.png)
 
 ## Technologies Used
 
