@@ -6,7 +6,7 @@ Music Recommendation System implemented using K-means Clustering Algorithm with 
 
 The dataset used is the Spotify_1_Million_Tracks dataset from Kaggle : https://shorturl.at/cUzI4
 
-![alt text](https://github.com/cosminstr/Music-Recommendation-System/blob/main/resources/webapp.png)
+![web_app](https://github.com/cosminstr/Music-Recommendation-System/blob/main/resources/webapp.png)
 
 ## Technologies Used
 
@@ -14,9 +14,5 @@ The dataset used is the Spotify_1_Million_Tracks dataset from Kaggle : https://s
 - Pandas and NumPy for data manipulation
 - Sci-Kit Learn for the ML model
 - Flask for the Web Application
-
-## Mentions
-
-I plan on modifying the model until i find the best configuration. For finding the right amount of clusters i used the Elbow Method and in order to generate randomness for recommendations i added a little noise to the euclidian distance and selected 10 random songs from the 'closest' 30. I plan on using different datasets to see on which one the model performs best.
 
 
